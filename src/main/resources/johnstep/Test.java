@@ -40,11 +40,8 @@ public class Test {
 		//exp.setCurrency(1, 63.3);
 		System.out.println("-----------------------------------");
 		
-		for(ExpensesData ed : exp.getExpensesData(2016, 12)){
-			System.out.println();
-			System.out.print(ed.getId() + ", " + ed.getDescription() + ", " + ed.getAmount());
-			
-		}
+	
+		System.out.println("Hello World!");
 		
 		
 		
