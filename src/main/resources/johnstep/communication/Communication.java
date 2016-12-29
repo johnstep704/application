@@ -17,8 +17,41 @@ public class Communication {
 	
 	SqlDriver driver = new SqlDriver();
 	Connection conn;
+	Statement stat; 
 	
-	private ArrayList<CommunicationData> communicationDataList = new ArrayList<>();
+	public void initConnect() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		driver.setConnection();
+		conn = (Connection) driver.getConnection();
+		stat = (Statement) conn.createStatement();
+	}
+	
+	public void closeConnect(){
+        try {
+			conn.close();
+			stat.close();
+		} catch (SQLException e) {
+			throw new RuntimeException("SQL Exception in call method closeConnect()!");
+		}
+        
+	}
+	
+	public void addSql(String query){
+	     try {
+	    	 stat.execute(query);
+		} catch (SQLException e) {
+			throw new RuntimeException("Check Database connection!");
+		}
+	}
+	
+	public ResultSet getSQLQuery(String query){
+		ResultSet resultSet;
+		try {
+			resultSet = stat.executeQuery(query);
+		} catch (SQLException e) {
+			throw new RuntimeException("Check Database connection!");
+		}
+		return resultSet;
+	}
 	
 	
 	public ArrayList<Property> getPropertyList() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
@@ -26,10 +59,8 @@ public class Communication {
 		ArrayList<Property> propertyList = new ArrayList<>();
 		
 		String vQuery = "select * from Property";
-		driver.setConnection();
-		conn = (Connection) driver.getConnection();
-		Statement stat=(Statement) conn.createStatement();
-        ResultSet rs=stat.executeQuery(vQuery);
+        
+		ResultSet rs=this.getSQLQuery(vQuery);
         
         while(rs.next()){
         	
@@ -42,8 +73,6 @@ public class Communication {
         }
         
         rs.close();
-        stat.close();
-        conn.close();
 		
 		return propertyList;
 	}
@@ -53,10 +82,8 @@ public class Communication {
 		ArrayList<ComServiceType> comServiceTypeList = new ArrayList<>();
 		
 		String vQuery = "select * from com_service_type";
-		driver.setConnection();
-		conn = (Connection) driver.getConnection();
-		Statement stat=(Statement) conn.createStatement();
-        ResultSet rs=stat.executeQuery(vQuery);
+		
+		ResultSet rs=this.getSQLQuery(vQuery);
 		
         
         while(rs.next()){
@@ -70,10 +97,7 @@ public class Communication {
         }
         
         rs.close();
-        stat.close();
-        conn.close();
-        
-		return comServiceTypeList;
+ 		return comServiceTypeList;
 		
 	}
 	
@@ -82,10 +106,7 @@ public class Communication {
 		ArrayList<CommunicationData> list = new ArrayList<>();
 		
 		String vQuery = "select * from communication_data where property_id = " + propertyId + " order by update_date";
-		driver.setConnection();
-		conn = (Connection) driver.getConnection();
-		Statement stat=(Statement) conn.createStatement();
-        ResultSet rs=stat.executeQuery(vQuery);
+		ResultSet rs=this.getSQLQuery(vQuery);
         
         while(rs.next()){
         	
@@ -112,14 +133,9 @@ public class Communication {
 		String vQuery = "insert into communication_data (id, property_id, com_service_type_id, description, master_name, price, update_date) "
 		+ "values( get_id(4), " + cd.getPropertyId() + ", " + cd.getComServiceTypeId() + ", '" + cd.getDescription() +"', '" 
 		+ cd.getMasterName() + "', " + cd.getPrice() + ", '" + cd.getUpdateDateString() +"')" ;
-		
-		driver.setConnection();
-		conn = (Connection) driver.getConnection();
-		Statement stat=(Statement) conn.createStatement();
-		stat.execute(vQuery);
-		
-        stat.close();
-        conn.close();
+
+		this.addSql(vQuery);
+
 	}
 	
 	public String getServiceType(int i) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
@@ -127,18 +143,12 @@ public class Communication {
 		String res = "";
 		
 		String strQuery = "Select * from com_service_type where id = " + i;
-		driver.setConnection();
-		conn = (Connection) driver.getConnection();
-		Statement stat=(Statement) conn.createStatement();
-        ResultSet rs=stat.executeQuery(strQuery);
+		ResultSet rs=this.getSQLQuery(strQuery);
         
         while(rs.next()){
         	res = rs.getString("description");
         }
         rs.close();
-        stat.close();
-        conn.close();
-        
         return res;
 	}
 	

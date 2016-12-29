@@ -6,7 +6,7 @@ int propId = Integer.parseInt(request.getParameter("prop_id"));
 
 
 Communication com = new Communication();
-
+com.initConnect();
 Property prop = null;
 
 for(Property p : com.getPropertyList()){

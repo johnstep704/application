@@ -4,6 +4,7 @@
 <%
 
 Communication com = new Communication();
+com.initConnect();
 
 
 %>
