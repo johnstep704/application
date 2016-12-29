@@ -18,7 +18,6 @@ public class Vehicle {
 	Connection conn;
 	
 	private ArrayList<VehicleDesc> vdList = new ArrayList<>();
-	private ArrayList<VehicleData> vehDataList = new ArrayList<>();
 	
 	public void setTestVdList(){
 		vdList.add(new VehicleDesc(1,"desc","l","vin","sts"));
@@ -26,6 +25,8 @@ public class Vehicle {
 	}
 	
 	public ArrayList<VehicleDesc> getVdList() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		
+		ArrayList<VehicleDesc> vdList = new ArrayList<>();
 		
 		driver.setConnection();
 		conn = (Connection) driver.getConnection();
@@ -43,6 +44,8 @@ public class Vehicle {
 		return vdList;
 	}
 	public ArrayList<VehicleData> getDataByVehicleId(int vehicleId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		
+		ArrayList<VehicleData> vehDataList = new ArrayList<>();
 		
 		String strQuery = "Select * from vehicle_data where vehicle_id = " + vehicleId + " order by update_date";
 		driver.setConnection();
